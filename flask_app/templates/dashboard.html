@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Dashboard</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %} <!-- declare a variable called messages -->
+        {% if messages %}                        <!-- check if there are any messages -->
+            {% for message in messages %}        <!-- loop through the messages -->
+                <p>{{message}}</p>               <!-- display each message in a p=aragraph tag -->
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h1>Welcome {{user.first_name}}</h1>
+    <div class="top-bar">
+        <p>All Posted Recipes</p>
+        <a href="/recipes/new">+ Create</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Under</th>
+                <th>Posted By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for recipe in recipes %}
+                <tr>
+                    <td>{{recipe.name}}</td>
+                    <td>{{'Yes' if recipe.cooking_time == 1 else 'No'}}</td>
+                    <td>{{recipe.user.first_name}}</td>
+                    <td>
+                        <a href="/recipes/{{recipe.id}}">view Recipe</a>
+                        {% if recipe.user_id == user.id %}
+                        <a href="/recipes/{{recipe.id}}/edit">edit</a>
+                        <a href="/recipes/{{recipe.id}}/delete">delete</a>
+                        {% endif %}
+                    </td>
+                    </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
